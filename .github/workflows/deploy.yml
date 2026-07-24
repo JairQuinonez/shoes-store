@@ -1,0 +1,49 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Generar environment.ts y environment.prod.ts con secrets
+        run: |
+          for file in src/environments/environment.template.ts src/environments/environment.prod.template.ts; do
+            out="${file/.template/}"
+            sed \
+              -e "s|__FIREBASE_API_KEY__|${{ secrets.FIREBASE_API_KEY }}|g" \
+              -e "s|__FIREBASE_AUTH_DOMAIN__|${{ secrets.FIREBASE_AUTH_DOMAIN }}|g" \
+              -e "s|__FIREBASE_PROJECT_ID__|${{ secrets.FIREBASE_PROJECT_ID }}|g" \
+              -e "s|__FIREBASE_STORAGE_BUCKET__|${{ secrets.FIREBASE_STORAGE_BUCKET }}|g" \
+              -e "s|__FIREBASE_SENDER_ID__|${{ secrets.FIREBASE_SENDER_ID }}|g" \
+              -e "s|__FIREBASE_APP_ID__|${{ secrets.FIREBASE_APP_ID }}|g" \
+              -e "s|__IMGBB_API_KEY__|${{ secrets.IMGBB_API_KEY }}|g" \
+              -e "s|__WS_PA_NUMBER__|${{ secrets.WSPA_NUMBER }}|g" \
+              "$file" > "$out"
+          done
+
+      - name: Build
+        run: npm run build -- --configuration production --base-href /karen-shoes/
+
+      - name: Deploy a gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist/shoes-store/browser
