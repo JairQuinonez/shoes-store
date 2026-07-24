@@ -40,7 +40,7 @@ jobs:
           done
 
       - name: Build
-        run: npm run build -- --configuration production --base-href /karen-shoes/
+        run: npm run build -- --configuration production --base-href /shoes-store/
 
       - name: Deploy a gh-pages
         uses: peaceiris/actions-gh-pages@v4
