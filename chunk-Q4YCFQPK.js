@@ -1,1 +1,0 @@
-var e={production:!1,firebase:{apiKey:"AIzaSyButuWVddmRvtciV57KgJTdu0mhJ8JelPE",authDomain:"shoes-store-57fc0.firebaseapp.com",projectId:"shoes-store-57fc0",storageBucket:"shoes-store-57fc0.firebasestorage.app",messagingSenderId:"373043766347",appId:"1:373043766347:web:f60c359f4af47bd01419ce"},imgbbApiKey:"200c01480159dc4a5981cef9ff6a3b24",wspaNumber:""};export{e as a};
