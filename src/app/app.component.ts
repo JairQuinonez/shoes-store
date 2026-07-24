@@ -22,7 +22,6 @@ import { environment } from "../environments/environment";
             <span>Karen's Shoes</span>
           </a>
         </div>
-
         <!-- 2. ENLACES PRINCIPALES (Centro) -->
         <div class="nav-links">
           <a
