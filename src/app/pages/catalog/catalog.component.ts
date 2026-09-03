@@ -21,80 +21,70 @@ import { environment } from "../../../environments/environment";
   template: `
     <section class="catalog-section">
       <div class="container">
-        <!-- Encabezado del Catálogo -->
+        
         <div class="catalog-header">
           <h2>Catálogo de Productos</h2>
           <p class="subtitle">Encuentra el par perfecto para cada ocasión</p>
         </div>
 
-        <!-- Grid de Productos -->
-        <div
-          class="grid"
-          *ngIf="displayedProducts.length > 0; else initialLoading"
-        >
-          <article class="product-card" *ngFor="let p of displayedProducts">
-            <div class="image-wrapper">
-              <!-- Fallback si no hay imagen -->
-              <img
-                [src]="p.imageSrc || p.imageUrl || 'assets/placeholder.png'"
-                [alt]="p.name || 'Producto'"
-                loading="lazy"
-              />
-            </div>
+        
+        @if (displayedProducts.length > 0) {
+          <div class="grid">
+            @for (p of displayedProducts; track $index) {
+              <article class="product-card">
+                <div class="image-wrapper">
+                  <!-- Fallback si no hay imagen -->
+                  <img
+                    [src]="p.imageSrc || p.imageUrl || 'assets/placeholder.png'"
+                    [alt]="p.name || 'Producto'"
+                    loading="lazy"
+                  />
+                </div>
 
-            <div class="card-info">
-              <!-- Truncado visual de texto y tooltip con el nombre completo al pasar el mouse -->
-              <h2 class="product-title" [title]="p.name">
-                {{ p.name || "Producto sin nombre" }}
-              </h2>
+                <div class="card-info">
+                  <h2 class="product-title" [title]="p.name">
+                    {{ p.name || "Producto sin nombre" }}
+                  </h2>
 
-              <div class="sizes-container">
-                <p class="sizes-label">Tallas disponibles:</p>
-                <!-- Muestra mensaje por defecto si no hay tallas -->
-                <p class="sizes-numbers">
-                  {{
-                    p.sizes && p.sizes.length > 0
-                      ? p.sizes.join(" - ")
-                      : "Consultar disponiblidad"
-                  }}
-                </p>
-              </div>
+                  <div class="sizes-container">
+                    <p class="sizes-label">Tallas disponibles:</p>
+                    <p class="sizes-numbers">
+                      {{
+                        p.sizes && p.sizes.length > 0
+                          ? p.sizes.join(" - ")
+                          : "Consultar disponiblidad"
+                      }}
+                    </p>
+                  </div>
 
-              <!-- Botón siempre bloqueado abajo -->
-              <div class="btn-wrapper">
-                <a
-                  [href]="getWhatsAppLink(p.name || 'este producto')"
-                  target="_blank"
-                  class="btn-price"
-                >
-                  Preguntar precio
-                </a>
-              </div>
-            </div>
-          </article>
-        </div>
-
-        <!-- Ancla invisible que activa el Scroll Infinito al llegar abajo -->
-        <div #scrollAnchor class="scroll-anchor">
-          <p
-            *ngIf="isLoading && displayedProducts.length > 0"
-            class="loading-more"
-          >
-            Cargando más productos...
-          </p>
-          <p
-            *ngIf="!hasMore && displayedProducts.length > 0"
-            class="end-message"
-          >
-            Has llegado al final del catálogo
-          </p>
-        </div>
-
-        <ng-template #initialLoading>
+                  <div class="btn-wrapper">
+                    <a
+                      [href]="getWhatsAppLink(p.name || 'este producto')"
+                      target="_blank"
+                      class="btn-price"
+                    >
+                      Preguntar precio
+                    </a>
+                  </div>
+                </div>
+              </article>
+            }
+          </div>
+        } @else {
           <div class="initial-loading">
             <p>Cargando catálogo...</p>
           </div>
-        </ng-template>
+        }
+
+        <div #scrollAnchor class="scroll-anchor">
+          @if (isLoading && displayedProducts.length > 0) {
+            <p class="loading-more">Cargando más productos...</p>
+          }
+
+          @if (!isLoading && !hasMore && displayedProducts.length > 0) {
+            <p class="end-message">Has llegado al final del catálogo</p>
+          }
+        </div>
       </div>
     </section>
   `,
@@ -317,17 +307,14 @@ export class CatalogComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoading = false;
   hasMore = true;
 
-  // Guarda el cursor (referencia del último documento pedido a Firestore)
   private lastDocSnapshot: QueryDocumentSnapshot<DocumentData> | null = null;
   private observer!: IntersectionObserver;
 
   ngOnInit() {
-    // Primera carga al iniciar el componente
     this.fetchPage();
   }
 
   ngAfterViewInit() {
-    // Se activa cuando el elemento ancla entra en el puerto de visión (viewport)
     this.observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && !this.isLoading && this.hasMore) {
@@ -353,7 +340,6 @@ export class CatalogComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isLoading = true;
 
     try {
-      // Pide la página utilizando el cursor de Firestore
       const result = await this.productService.getProductsPage(
         this.pageSize,
         this.lastDocSnapshot,
@@ -366,10 +352,8 @@ export class CatalogComponent implements OnInit, AfterViewInit, OnDestroy {
           : p.imageUrl,
       }));
 
-      // Concatena las nuevas tarjetas de producto
       this.displayedProducts = [...this.displayedProducts, ...processed];
 
-      // Actualiza el cursor y el indicador de disponibilidad
       this.lastDocSnapshot = result.lastDoc;
       this.hasMore = result.hasMore;
     } catch (error) {

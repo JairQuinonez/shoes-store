@@ -26,7 +26,6 @@ export class ProductService {
     pageSize: number,
     startAfterDoc: QueryDocumentSnapshot<DocumentData> | null = null
   ) {
-    // Pedimos (pageSize + 1) para determinar fácilmente si hay más registros (hasMore)
     const fetchLimit = pageSize + 1;
 
     let q = query(
@@ -35,7 +34,6 @@ export class ProductService {
       limit(fetchLimit)
     );
 
-    // Si recibimos un cursor, comenzamos después de ese documento
     if (startAfterDoc) {
       q = query(
         this.productsCollection,
@@ -48,10 +46,8 @@ export class ProductService {
     const snapshot = await getDocs(q);
     const docs = snapshot.docs;
 
-    // Verificamos si hay más productos para habilitar el botón "Siguiente"
     const hasMore = docs.length > pageSize;
 
-    // Recortamos el arreglo para mostrar exactamente la cantidad solicitada
     const pageDocs = hasMore ? docs.slice(0, pageSize) : docs;
 
     const products: Product[] = pageDocs.map((d) => ({
@@ -59,7 +55,6 @@ export class ProductService {
       ...(d.data() as Product),
     }));
 
-    // El último documento servirá de cursor para la siguiente página
     const lastDoc = pageDocs.length > 0 ? pageDocs[pageDocs.length - 1] : null;
 
     return {
@@ -69,7 +64,6 @@ export class ProductService {
     };
   }
 
-  // 👇 NUEVO MÉTODO: Obtiene un solo producto por su ID para editar
   async getProductById(id: string): Promise<Product | null> {
     const docRef = doc(this.firestore, "products", id);
     const docSnap = await getDoc(docRef);

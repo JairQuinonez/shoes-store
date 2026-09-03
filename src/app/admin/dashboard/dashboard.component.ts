@@ -13,7 +13,6 @@ import { QueryDocumentSnapshot, DocumentData } from "@angular/fire/firestore";
   imports: [CommonModule, RouterLink, FormsModule],
   template: `
     <div class="dashboard-wrapper">
-      <!-- BARRA LATERAL (SIDEBAR) -->
       <aside class="sidebar">
         <div class="brand-section">
           <h2>Panel Admin</h2>
@@ -33,9 +32,7 @@ import { QueryDocumentSnapshot, DocumentData } from "@angular/fire/firestore";
         </div>
       </aside>
 
-      <!-- CONTENIDO PRINCIPAL -->
       <main class="main-content">
-        <!-- HEADER DE SECCIÓN -->
         <header class="content-header">
           <div>
             <h1>Catálogo de Productos</h1>
@@ -48,7 +45,6 @@ import { QueryDocumentSnapshot, DocumentData } from "@angular/fire/firestore";
           </a>
         </header>
 
-        <!-- TARJETA CONTENEDORA DE TABLA -->
         <div class="table-card">
           <div class="table-responsive">
             <table>
@@ -62,15 +58,17 @@ import { QueryDocumentSnapshot, DocumentData } from "@angular/fire/firestore";
               </thead>
 
               <tbody>
-                <!-- ESTADO DE CARGA -->
-                <tr *ngIf="loading">
-                  <td colspan="4" class="state-cell">
-                    <div class="loader-spinner"></div>
-                    <p>Cargando productos...</p>
-                  </td>
-                </tr>
-                <ng-container *ngIf="!loading"
-                  ><tr *ngFor="let p of products">
+                @if (loading) {
+                  <tr>
+                    <td colspan="4" class="state-cell">
+                      <div class="loader-spinner"></div>
+                      <p>Cargando productos...</p>
+                    </td>
+                  </tr>
+                }
+                @if (!loading) {
+                  @for (p of products; track p.id) {
+                    <tr>
                     <td class="img-cell">
                       <div class="img-wrapper">
                         <img
@@ -84,15 +82,14 @@ import { QueryDocumentSnapshot, DocumentData } from "@angular/fire/firestore";
                     </td>
 
                     <td class="sizes-cell">
-                      <span class="sizes-tag" *ngIf="p.sizes && p.sizes.length">
-                        {{ p.sizes.join(", ") }}
-                      </span>
-                      <span
-                        class="no-sizes"
-                        *ngIf="!p.sizes || !p.sizes.length"
-                      >
-                        —
-                      </span>
+                      @if (p.sizes && p.sizes.length) {
+                        <span class="sizes-tag">
+                          {{ p.sizes.join(", ") }}
+                        </span>
+                      }
+                      @if (!p.sizes || !p.sizes.length) {
+                        <span class="no-sizes">—</span>
+                      }
                     </td>
 
                     <td class="actions-cell">
@@ -106,31 +103,29 @@ import { QueryDocumentSnapshot, DocumentData } from "@angular/fire/firestore";
                         🗑️ Eliminar
                       </button>
                     </td>
+                    </tr>
+                  }
+                }
+
+                @if (!loading && products.length === 0) {
+                  <tr>
+                    <td colspan="4" class="state-cell empty-state">
+                      <span class="empty-icon">🛍️</span>
+                      <p>No hay productos en esta página.</p>
+                      <a routerLink="/admin/nuevo" class="link-add">
+                        Agregar un producto
+                      </a>
+                    </td>
                   </tr>
-                </ng-container>
-
-                <!-- LISTA DE PRODUCTOS -->
-
-                <!-- ESTADO VACÍO -->
-                <tr *ngIf="!loading && products.length === 0">
-                  <td colspan="4" class="state-cell empty-state">
-                    <span class="empty-icon">🛍️</span>
-                    <p>No hay productos en esta página.</p>
-                    <a routerLink="/admin/nuevo" class="link-add">
-                      Agregar un producto
-                    </a>
-                  </td>
-                </tr>
+                }
               </tbody>
             </table>
           </div>
 
-          <!-- BARRA DE PAGINACIÓN -->
           <div
             class="pagination-bar"
-            *ngIf="!loading && (products.length > 0 || currentPage > 1)"
           >
-            <!-- SELECTOR DE TAMAÑO DE PÁGINA -->
+            @if (!loading && (products.length > 0 || currentPage > 1)) {
             <div class="page-size-selector">
               <label for="pageSize">Mostrar por página:</label>
               <select
@@ -165,6 +160,7 @@ import { QueryDocumentSnapshot, DocumentData } from "@angular/fire/firestore";
                 Siguiente →
               </button>
             </div>
+            }
           </div>
         </div>
       </main>
@@ -172,9 +168,6 @@ import { QueryDocumentSnapshot, DocumentData } from "@angular/fire/firestore";
   `,
   styles: [
     `
-      /* =========================================
-         LAYOUT Y CONTENEDOR GENERAL
-         ========================================= */
       .dashboard-wrapper {
         display: flex;
         min-height: 100vh;
@@ -187,9 +180,6 @@ import { QueryDocumentSnapshot, DocumentData } from "@angular/fire/firestore";
         padding-top: 130px;
       }
 
-      /* =========================================
-         SIDEBAR
-         ========================================= */
       .sidebar {
         width: 260px;
         background: #0b1a20;
@@ -285,9 +275,6 @@ import { QueryDocumentSnapshot, DocumentData } from "@angular/fire/firestore";
         color: #fca5a5;
       }
 
-      /* =========================================
-         ÁREA DE CONTENIDO
-         ========================================= */
       .main-content {
         flex: 1;
         padding: 0 35px 50px 30px;
@@ -317,9 +304,6 @@ import { QueryDocumentSnapshot, DocumentData } from "@angular/fire/firestore";
         display: none;
       }
 
-      /* =========================================
-         TARJETA Y TABLA
-         ========================================= */
       .table-card {
         background: #ffffff;
         border-radius: 20px;
@@ -470,9 +454,6 @@ import { QueryDocumentSnapshot, DocumentData } from "@angular/fire/firestore";
         }
       }
 
-      /* =========================================
-         BARRA DE PAGINACIÓN
-         ========================================= */
       .pagination-bar {
         display: flex;
         justify-content: space-between;
@@ -536,7 +517,6 @@ import { QueryDocumentSnapshot, DocumentData } from "@angular/fire/firestore";
         cursor: not-allowed;
       }
 
-      /* Responsive */
       @media (max-width: 860px) {
         .dashboard-wrapper {
           flex-direction: column;
@@ -580,7 +560,6 @@ export class AdminDashboardComponent implements OnInit {
   products: Product[] = [];
   loading = true;
 
-  // CONFIGURACIÓN DE PAGINACIÓN
   pageSize = 5;
   currentPage = 1;
   hasMore = false;
@@ -615,9 +594,8 @@ export class AdminDashboardComponent implements OnInit {
     }
   }
 
-  // Cambia el número de elementos mostrados por página
   changePageSize() {
-    this.pageCursors = [null]; // Reiniciar cursores
+    this.pageCursors = [null];
     this.loadPage(1);
   }
 
