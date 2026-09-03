@@ -11,16 +11,13 @@ import { AuthService } from '../../services/auth.service';
   template: `
     <div class="login-wrapper">
       <div class="login-card">
-        <!-- CABECERA Y MARCA -->
         <div class="brand-header">
           <div class="logo-badge">👠</div>
           <h1>Karen's Shoes</h1>
           <span class="subtitle">Panel Administrador</span>
         </div>
 
-        <!-- FORMULARIO DE ACCESO -->
         <form class="login-form" (ngSubmit)="onSubmit()">
-          <!-- CORREO -->
           <div class="form-group">
             <label for="email">Correo electrónico</label>
             <div class="input-box">
@@ -36,7 +33,6 @@ import { AuthService } from '../../services/auth.service';
             </div>
           </div>
 
-          <!-- CONTRASEÑA -->
           <div class="form-group">
             <label for="password">Contraseña</label>
             <div class="input-box">
@@ -52,20 +48,23 @@ import { AuthService } from '../../services/auth.service';
             </div>
           </div>
 
-          <!-- MENSAJE DE ERROR -->
-          <div class="error-banner" *ngIf="error">
-            <span>⚠️ {{ error }}</span>
-          </div>
+          @if (error) {
+            <div class="error-banner">
+              <span>⚠️ {{ error }}</span>
+            </div>
+          }
 
-          <!-- BOTÓN INGRESO -->
           <button type="submit" class="btn-submit" [disabled]="loading">
-            <span *ngIf="!loading">Iniciar sesión →</span>
-            <span *ngIf="loading" class="loading-state">
-              <span class="spinner"></span> Validando...
-            </span>
+            @if (!loading) {
+              <span>Iniciar sesión →</span>
+            }
+            @if (loading) {
+              <span class="loading-state">
+                <span class="spinner"></span> Validando...
+              </span>
+            }
           </button>
 
-          <!-- REGRESO A LA TIENDA -->
           <a routerLink="/" class="back-link">← Volver al sitio público</a>
         </form>
       </div>
@@ -73,9 +72,6 @@ import { AuthService } from '../../services/auth.service';
   `,
   styles: [
     `
-      /* =========================================
-         LAYOUT Y CONTENEDOR PRINCIPAL
-         ========================================= */
       .login-wrapper {
         min-height: 100vh;
         width: 100%;
@@ -102,9 +98,6 @@ import { AuthService } from '../../services/auth.service';
         border: 1px solid #f1f5f9;
       }
 
-      /* =========================================
-         CABECERA / MARCA
-         ========================================= */
       .brand-header {
         text-align: center;
         margin-bottom: 32px;
@@ -138,9 +131,6 @@ import { AuthService } from '../../services/auth.service';
         letter-spacing: 0.5px;
       }
 
-      /* =========================================
-         FORMULARIO Y CAMPOS
-         ========================================= */
       .login-form {
         display: flex;
         flex-direction: column;
@@ -191,9 +181,6 @@ import { AuthService } from '../../services/auth.service';
         box-shadow: 0 0 0 4px rgba(191, 235, 230, 0.4);
       }
 
-      /* =========================================
-         ALERTAS DE ERROR
-         ========================================= */
       .error-banner {
         background: #fef2f2;
         border: 1px solid #fecaca;
@@ -205,9 +192,6 @@ import { AuthService } from '../../services/auth.service';
         text-align: center;
       }
 
-      /* =========================================
-         BOTÓN Y ENLACES
-         ========================================= */
       .btn-submit {
         background: #0b1a20;
         color: #ffffff;

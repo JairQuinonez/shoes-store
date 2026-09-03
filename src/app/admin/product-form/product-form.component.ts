@@ -15,16 +15,13 @@ import { environment } from "../../../environments/environment";
   imports: [CommonModule, FormsModule, RouterLink],
   template: `
     <section class="form-section">
-      <!-- TOAST DE NOTIFICACIÓN -->
       <div class="toast" [class.show]="showToast">
         <span class="toast-icon">✅</span>
         <span>{{ toastMessage }}</span>
       </div>
 
       <div class="form-wrapper">
-        <!-- FORMULARIO PRINCIPAL -->
         <div class="form-container">
-          <!-- Encabezado del Formulario -->
           <div class="form-header">
             <h1>{{ editId ? "Editar Producto" : "Nuevo Producto" }}</h1>
             <p class="subtitle">
@@ -37,7 +34,6 @@ import { environment } from "../../../environments/environment";
           </div>
 
           <form (ngSubmit)="save()" class="product-form">
-            <!-- Campo Nombre -->
             <div class="form-group">
               <label for="name">Nombre del producto</label>
               <input
@@ -50,23 +46,22 @@ import { environment } from "../../../environments/environment";
               />
             </div>
 
-            <!-- Selección de Tallas (Chips de Botones) -->
             <div class="form-group">
               <label>Tallas Disponibles</label>
               <div class="sizes-grid">
-                <button
-                  type="button"
-                  *ngFor="let size of availableSizes"
-                  class="size-chip"
-                  [class.selected]="isSelectedSize(size)"
-                  (click)="toggleSize(size)"
-                >
-                  {{ size }}
-                </button>
+                @for (size of availableSizes; track size) {
+                  <button
+                    type="button"
+                    class="size-chip"
+                    [class.selected]="isSelectedSize(size)"
+                    (click)="toggleSize(size)"
+                  >
+                    {{ size }}
+                  </button>
+                }
               </div>
             </div>
 
-            <!-- Carga de Imagen -->
             <div class="form-group">
               <label>Imagen del Producto</label>
               <div class="file-dropzone">
@@ -86,13 +81,13 @@ import { environment } from "../../../environments/environment";
               </div>
             </div>
 
-            <!-- Vista Previa de la Imagen -->
-            <div class="preview-box" *ngIf="imagePreview">
-              <p class="preview-title">Vista previa:</p>
-              <img [src]="imagePreview" alt="Vista previa" />
-            </div>
+            @if (imagePreview) {
+              <div class="preview-box">
+                <p class="preview-title">Vista previa:</p>
+                <img [src]="imagePreview" alt="Vista previa" />
+              </div>
+            }
 
-            <!-- Botones de Acción -->
             <div class="actions">
               <button type="submit" class="btn-submit" [disabled]="saving">
                 {{
@@ -113,32 +108,32 @@ import { environment } from "../../../environments/environment";
           </form>
         </div>
 
-        <!-- PANEL LATERAL: LISTA DE PRODUCTOS AGREGADOS EN LA SESIÓN -->
-        <aside class="saved-panel" *ngIf="savedProductsList.length > 0">
-          <div class="panel-header">
-            <h3>Agregados recientemente</h3>
-            <span class="badge-count">{{ savedProductsList.length }}</span>
-          </div>
+        @if (savedProductsList.length > 0) {
+          <aside class="saved-panel">
+            <div class="panel-header">
+              <h3>Agregados recientemente</h3>
+              <span class="badge-count">{{ savedProductsList.length }}</span>
+            </div>
 
-          <ul class="saved-list">
-            <li *ngFor="let name of savedProductsList; let i = index">
-              <span class="item-icon">👟</span>
-              <span class="item-name">{{ name }}</span>
-            </li>
-          </ul>
+            <ul class="saved-list">
+              @for (name of savedProductsList; track $index) {
+                <li>
+                  <span class="item-icon">👟</span>
+                  <span class="item-name">{{ name }}</span>
+                </li>
+              }
+            </ul>
 
-          <button (click)="finish()" class="btn-done-side">
-            ✓ Finalizar y volver
-          </button>
-        </aside>
+            <button (click)="finish()" class="btn-done-side">
+              ✓ Finalizar y volver
+            </button>
+          </aside>
+        }
       </div>
     </section>
   `,
   styles: [
     `
-      /* =========================================
-         SECCIÓN Y CONTENEDORES
-         ========================================= */
       .form-section {
         min-height: 100vh;
         background: linear-gradient(
@@ -190,9 +185,6 @@ import { environment } from "../../../environments/environment";
         margin: 0;
       }
 
-      /* =========================================
-         CAMPOS DE FORMULARIO
-         ========================================= */
       .form-group {
         margin-bottom: 22px;
       }
@@ -224,9 +216,6 @@ import { environment } from "../../../environments/environment";
         box-shadow: 0 0 0 4px rgba(191, 235, 230, 0.3);
       }
 
-      /* =========================================
-         CHIPS DE TALLAS
-         ========================================= */
       .sizes-grid {
         display: flex;
         flex-wrap: wrap;
@@ -256,9 +245,6 @@ import { environment } from "../../../environments/environment";
         box-shadow: 0 4px 10px rgba(11, 26, 32, 0.2);
       }
 
-      /* =========================================
-         IMAGEN & PREVIEW
-         ========================================= */
       .file-dropzone input[type="file"] {
         display: none;
       }
@@ -306,9 +292,6 @@ import { environment } from "../../../environments/environment";
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
       }
 
-      /* =========================================
-         BOTONES DE ACCIÓN
-         ========================================= */
       .actions {
         display: flex;
         flex-direction: column;
@@ -368,9 +351,6 @@ import { environment } from "../../../environments/environment";
         color: #0b1a20;
       }
 
-      /* =========================================
-         PANEL LATERAL (LISTA DE PRODUCTOS GUARDADOS)
-         ========================================= */
       .saved-panel {
         width: 300px;
         background: #ffffff;
@@ -453,9 +433,6 @@ import { environment } from "../../../environments/environment";
         background: #172e38;
       }
 
-      /* =========================================
-         TOAST FLOTANTE
-         ========================================= */
       .toast {
         position: fixed;
         top: 30px;
@@ -497,7 +474,6 @@ import { environment } from "../../../environments/environment";
         }
       }
 
-      /* Responsive */
       @media (max-width: 800px) {
         .form-wrapper {
           flex-direction: column;
@@ -540,8 +516,7 @@ export class ProductFormComponent implements OnInit {
   selectedFile?: File;
   imagePreview?: string;
 
-  // ESTADOS NUEVOS
-  savedProductsList: string[] = []; // Nombres de los productos guardados en la sesión
+  savedProductsList: string[] = [];
   showToast = false;
   toastMessage = "";
 
@@ -631,16 +606,14 @@ export class ProductFormComponent implements OnInit {
       if (this.editId) {
         await this.productService.updateProduct(this.editId, data);
         this.triggerToast("¡Producto actualizado con éxito!");
-        this.finish(); // Si está editando, redirige directo
+        this.finish();
         return;
       } else {
         await this.productService.addProduct(data);
-        // Guardamos el nombre en la lista lateral
         this.savedProductsList.unshift(data.name);
         this.triggerToast("¡Guardado correctamente!");
       }
 
-      // Reiniciamos el formulario para continuar agregando más productos
       this.resetForm();
     } catch (err) {
       console.error("Error guardando producto:", err);
@@ -650,7 +623,6 @@ export class ProductFormComponent implements OnInit {
     }
   }
 
-  // REINICIA EL FORMULARIO
   resetForm() {
     this.product = {
       name: "",
@@ -663,14 +635,12 @@ export class ProductFormComponent implements OnInit {
     this.selectedFile = undefined;
     this.imagePreview = undefined;
 
-    // Resetea el input file
     const fileInput = document.getElementById("file-input") as HTMLInputElement;
     if (fileInput) {
       fileInput.value = "";
     }
   }
 
-  // MOSTRAR TOAST NOTIFICACIÓN
   triggerToast(message: string) {
     this.toastMessage = message;
     this.showToast = true;
@@ -680,7 +650,6 @@ export class ProductFormComponent implements OnInit {
     }, 3000);
   }
 
-  // BOTÓN PARA VOLVER AL PANEL
   finish() {
     this.router.navigate(["/admin"]);
   }

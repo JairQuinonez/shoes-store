@@ -10,7 +10,8 @@ import { environment } from "../environments/environment";
   imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
   template: `
     <!-- HEADER FLOTANTE TIPO PÍLDORA (Se oculta en el login) -->
-    <header class="floating-header" *ngIf="showNavbar">
+    @if (showNavbar) {
+      <header class="floating-header">
       <nav class="pill-nav">
         <!-- 1. ÍCONO / LOGO CIRCULAR (Izquierda) -->
         <div>
@@ -42,18 +43,21 @@ import { environment } from "../environments/environment";
           Contacto
         </a>
       </nav>
-    </header>
+      </header>
+    }
 
     <main>
       <router-outlet></router-outlet>
     </main>
 
     <!-- FOOTER (Se oculta en el login) -->
-    <footer class="site-footer" *ngIf="showNavbar">
-      <div class="container">
-        <p>&copy; {{ year }} Karen's Shoes. Todos los derechos reservados.</p>
-      </div>
-    </footer>
+    @if (showNavbar) {
+      <footer class="site-footer">
+        <div class="container">
+          <p>&copy; {{ year }} Karen's Shoes. Todos los derechos reservados.</p>
+        </div>
+      </footer>
+    }
   `,
   styles: [
     `

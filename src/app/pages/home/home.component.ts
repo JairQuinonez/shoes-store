@@ -6,10 +6,8 @@ import { RouterLink } from "@angular/router";
   standalone: true,
   imports: [RouterLink],
   template: `
-    <!-- SECCIÓN 1: HERO (Imagen 1) -->
     <section class="hero">
       <div class="hero-overlay"></div>
-      <!-- Oscurece un poco el fondo para que el texto resalte -->
 
       <div class="hero-content">
         <h1>CALZADO PARA<br />TODOS</h1>
@@ -19,7 +17,6 @@ import { RouterLink } from "@angular/router";
 
         <div class="hero-buttons">
           <a routerLink="/catalogo" class="btn btn-white">Ir a catálogo</a>
-          <!-- Cambia el link del href por tu link real de WhatsApp -->
         </div>
       </div>
     </section>
@@ -52,7 +49,6 @@ import { RouterLink } from "@angular/router";
       </div>
     </section>
 
-    <!-- SECCIÓN 2: FOOTER / WHATSAPP CTA (Imagen 2) -->
     <section class="whatsapp-cta">
       <div class="wa-text-container">
         <h2>
@@ -63,7 +59,6 @@ import { RouterLink } from "@angular/router";
       </div>
 
       <div class="wa-collage">
-        <!-- Reemplaza los 'src' con las URLs de tus imágenes reales -->
         <img
           src="https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=300&q=80"
           alt="Zapato 1"
@@ -94,21 +89,17 @@ import { RouterLink } from "@angular/router";
   `,
   styles: [
     `
-      /* =========================================
-       SECCIÓN 1: HERO
-       ========================================= */
       .hero {
         position: relative;
-        height: 90vh; /* Ocupa casi toda la pantalla */
+        height: 90vh;
         min-height: 600px;
-        /* AQUÍ PONES TU IMAGEN DE FONDO REAL */
         background-image: url("https://images.unsplash.com/photo-1514989940723-e8e51635b782?auto=format&fit=crop&w=1920&q=80");
         background-size: cover;
         background-position: center;
         display: flex;
         align-items: center;
-        padding: 0 10%; /* Espaciado lateral */
-        margin-top: -80px; /* Sube la sección por si tu navbar tiene fondo transparente */
+        padding: 0 10%;
+        margin-top: -80px;
       }
 
       .hero-overlay {
@@ -117,13 +108,13 @@ import { RouterLink } from "@angular/router";
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(0, 0, 0, 0.2); /* Sombra sutil */
+        background: rgba(0, 0, 0, 0.2);
         z-index: 1;
       }
 
       .hero-content {
         position: relative;
-        z-index: 2; /* Asegura que el texto esté por encima de la sombra */
+        z-index: 2;
         color: white;
       }
 
@@ -151,7 +142,7 @@ import { RouterLink } from "@angular/router";
 
       .hero-buttons {
         display: flex;
-        gap: 20px; /* Espacio entre los botones */
+        gap: 20px;
       }
 
       .btn-white {
@@ -159,7 +150,7 @@ import { RouterLink } from "@angular/router";
         color: #000;
         text-decoration: none;
         padding: 12px 35px;
-        border-radius: 30px; /* Botones redondeados tipo píldora */
+        border-radius: 30px;
         font-weight: 600;
         font-size: 1rem;
         transition: all 0.3s ease;
@@ -171,11 +162,8 @@ import { RouterLink } from "@angular/router";
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
       }
 
-      /* =========================================
-       SECCIÓN 2: BENEFICIOS (NUEVA SECCIÓN)
-       ========================================= */
       .features {
-        background: #faf8f5; /* Tono crema suave y elegante */
+        background: #faf8f5;
         padding: 70px 10%;
         border-bottom: 1px solid rgba(0, 0, 0, 0.04);
       }
@@ -221,17 +209,13 @@ import { RouterLink } from "@angular/router";
         margin: 0;
       }
 
-      /* =========================================
-       SECCIÓN 2: FOOTER / WHATSAPP CTA
-       ========================================= */
       .whatsapp-cta {
-        /* Gradiente de celeste a rosa suave */
         background: linear-gradient(135deg, #a4ebd8 0%, #f6d1e4 100%);
         padding: 100px 10%;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        overflow: hidden; /* Evita que el collage ensanche la página */
+        overflow: hidden;
       }
 
       .wa-text-container h2 {
@@ -242,13 +226,12 @@ import { RouterLink } from "@angular/router";
       }
 
       .highlight {
-        color: #25d366; /* Verde exacto de WhatsApp */
+        color: #25d366;
         text-decoration: underline;
-        text-underline-offset: 8px; /* Separa un poco la línea de la letra */
+        text-underline-offset: 8px;
         text-decoration-thickness: 3px;
       }
 
-      /* EL COLLAGE DE IMÁGENES */
       .wa-collage {
         position: relative;
         width: 600px;
@@ -260,7 +243,7 @@ import { RouterLink } from "@angular/router";
         width: 180px;
         height: 180px;
         object-fit: cover;
-        border-radius: 30px; /* Bordes redondeados gruesos */
+        border-radius: 30px;
         box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
         transition:
           transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
@@ -268,7 +251,6 @@ import { RouterLink } from "@angular/router";
         cursor: pointer;
       }
 
-      /* Posicionamiento y rotación para imitar la Imagen 2 */
       .c-img-1 {
         top: 10%;
         left: 0%;
@@ -300,15 +282,11 @@ import { RouterLink } from "@angular/router";
         z-index: 2;
       }
 
-      /* Efecto al pasar el ratón por el collage */
       .c-img:hover {
         transform: scale(1.15) rotate(0deg);
         z-index: 10;
       }
 
-      /* =========================================
-       RESPONSIVE DESIGN (MÓVILES)
-       ========================================= */
       @media (max-width: 992px) {
         .hero-content h1 {
           font-size: 3.5rem;
