@@ -74,16 +74,18 @@ import { environment } from "../environments/environment";
       .pill-nav {
         pointer-events: auto; /* Reactiva clics dentro de la cápsula */
         background: #18181b; /* Negro antracita elegante */
-        padding: 6px 8px 6px 8px;
+        padding: 6px 8px;
         border-radius: 50px;
         display: flex;
         align-items: center;
-        gap: 28px;
+        gap: 16px;
         box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
         border: 1px solid rgba(255, 255, 255, 0.12);
         backdrop-filter: blur(10px);
         width: min(92vw, 760px);
         justify-content: space-between;
+        flex-wrap: nowrap;
+        min-width: 0;
       }
 
       /* Badge circular del Logo */
@@ -101,6 +103,8 @@ import { environment } from "../environments/environment";
           transform 0.2s ease,
           box-shadow 0.2s ease;
         box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+        min-width: 0;
+        flex-shrink: 1;
       }
 
       .logo-badge:hover {
@@ -124,7 +128,10 @@ import { environment } from "../environments/environment";
       .nav-links {
         display: flex;
         align-items: center;
-        gap: 22px;
+        gap: 18px;
+        justify-content: center;
+        flex: 1 1 auto;
+        min-width: 0;
       }
 
       .nav-links a {
@@ -133,6 +140,7 @@ import { environment } from "../environments/environment";
         font-size: 0.9rem;
         font-weight: 500;
         transition: color 0.2s ease;
+        white-space: nowrap;
       }
 
       .nav-links a:hover {
@@ -184,19 +192,51 @@ import { environment } from "../environments/environment";
         .floating-header {
           top: 12px;
         }
+
         .pill-nav {
-          gap: 14px;
-          padding: 5px 6px;
+          width: min(92vw, 420px);
+          gap: 6px;
+          padding: 5px 8px;
+          border-radius: 28px;
+          flex-wrap: nowrap;
+          justify-content: space-between;
+          align-items: center;
         }
+
+        .logo-badge {
+          padding: 4px 6px 4px 4px;
+          font-size: 0.68rem;
+          gap: 6px;
+        }
+
+        .logo-badge img {
+          width: 28px;
+          height: 28px;
+        }
+
+        .logo-badge span {
+          max-width: 78px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
         .nav-links {
-          gap: 12px;
+          gap: 8px;
+          flex: 1 1 auto;
+          justify-content: center;
+          min-width: 0;
         }
+
         .nav-links a {
-          font-size: 0.8rem;
+          font-size: 0.72rem;
         }
+
         .cta-pill {
-          padding: 6px 14px;
-          font-size: 0.78rem;
+          padding: 7px 12px;
+          font-size: 0.7rem;
+          min-width: 0;
+          white-space: nowrap;
         }
       }
     `,
