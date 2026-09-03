@@ -76,7 +76,10 @@ import { environment } from "../../../environments/environment";
 
         <!-- Ancla invisible que activa el Scroll Infinito al llegar abajo -->
         <div #scrollAnchor class="scroll-anchor">
-          <p *ngIf="isLoading && displayedProducts.length > 0" class="loading-more">
+          <p
+            *ngIf="isLoading && displayedProducts.length > 0"
+            class="loading-more"
+          >
             Cargando más productos...
           </p>
           <p
